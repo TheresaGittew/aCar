@@ -1,0 +1,5 @@
+Notes on required format of input files
+
+- Please remove headers from all input files!
+- Nodes start with 0 and end with highest number n-1
+- Demand-file should consist of n columns with n-1 services, where column 1 contains the node (settlement) id and the following columns the related demand values
