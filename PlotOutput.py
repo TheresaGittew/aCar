@@ -143,7 +143,7 @@ def paint_output(VRP_obj, dataframes, path):
         plt.legend(handles=[all_customers, active_customers, hub, workaround_q])
 
         plot_dir = os.path.dirname(__file__)
-        results_dir = os.path.join(plot_dir, path+ '/Scenario_limit-'+str(VRP_obj.sets.limit)+'vehicle-'+str(VRP_obj.sets.K)+'/')
+        results_dir = os.path.join(plot_dir, path+ '/Scenario vehicle-'+str(VRP_obj.sets.K)+'/')
         sample_plot_name = "Plot_VRP_" + str(t)
 
 

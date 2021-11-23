@@ -63,7 +63,7 @@ class FP_VRP_Input():
             self.create_potential_max_ranges_for_od_matrix()
 
     def create_potential_max_ranges_for_od_matrix(self):
-        print("starting")
+
         self.arc_weight_to_battery_usage \
             = dict(((i,j, m),(m, (self.c[(i,j)] / self.vehicle_props.compute_range_for_weight(m)))) for (i,j) in self.A for m in range(self.vehicle_props.max_weight+1))
         self.weight_steps = [i for i in range(0, self.vehicle_props.max_weight+1) if i % 10 == 0]
@@ -200,7 +200,7 @@ class MIP_FP_VRP():
 
     def add_dynamic_acar_constraints(self):
         print("Battery usage" , self.sets.arc_weight_to_battery_usage)
-        print(self.sets.weight_steps)
+
 
         self.mp.addConstrs(
             quicksum(self.helper_e[i,j, t, w] * self.sets.arc_weight_to_battery_usage[i,j, w][0] for w in self.sets.weight_steps) == quicksum(self.l[i,j, t, s] * self.sets.service_info[s]['weight_pu'] for s in self.sets.S)
@@ -229,13 +229,13 @@ class MIP_FP_VRP():
         self.mp.Params.MIPGap = 0.001
         # self.mp.setParam('OutputFlag', 0)
         self.mp.optimize()
-        for k, v in self.helper_e.items():
-            if v.X != 0:
-                print (k, v)
-        print(self.sets.arc_weight_to_battery_usage[0,1,400])
-        print("NOW e:")
-        for k, v in self.e.items():
-            print(k, v)
+        # for k, v in self.helper_e.items():
+        #     if v.X != 0:
+        #         print (k, v)
+        # print(self.sets.arc_weight_to_battery_usage[0,1,400])
+        # print("NOW e:")
+        # for k, v in self.e.items():
+        #     print(k, v)
 
 
 

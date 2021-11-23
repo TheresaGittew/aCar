@@ -8,7 +8,7 @@ import itertools
 
 # # # #Todo
 # # Specify path for input files
-path_demand_file = 'GIS_Data/11-19-21_EXAMPLE_DemandList.csv'
+path_demand_file = 'GIS_Data/11-19-21_EXAMPLE_DemandList2.csv'
 path_OD_matrix= 'GIS_Data/11-19-21_EXAMPLE_ODs.csv'
 path_service_times = 'GIS_Data/11-19-21_EXAMPLE_ServiceTimes.csv'
 v_features_2 = VehicleFeatures(range_zero_weight=200, range_1000kgs_weight=50, total_capa=1000, max_weight=500)
@@ -29,11 +29,11 @@ v_s = {'PNC':120}
 number_vec = [2]
 distance_limits_ub = [40]
 distance_limits_lb = [30]
-path_for_outputs = 'Results/Results-11-21-Test_Dynamic_10kg/'
+path_for_outputs = 'Results/Results-11-21-Min_Nr_Services/'
 
 # # # Todo
 # select variant (see enum in VRP_FlexiblePeriodic.py)
-variante = Variant.DYNAMIC_ACAR_RANGE
+variante = Variant.MIN_TOTAL_NUMBER_OF_SERVICE
 
 
 
@@ -48,7 +48,6 @@ list_timeintervals = [i for i in range(0, timeintervals_number)]
 # arcs and their distances
 od_matrix_as_dict = read_odmatrix(path_OD_matrix)    # returns a dictionary with arcs -> distances
 arcs = od_matrix_as_dict.keys()
-print(arcs)
 
 # demand data
 # required input format: list with customers, and
@@ -72,13 +71,12 @@ for s in scenarios:
     d_l_l = s[1]
     d_l_u = s[2]
 
-    relevant_customers = [6,9,10,17,18,22,4,1]     #find_relevant_customers(od_matrix_as_dict,len(customer_list), d_l_l, d_l_u)
+    relevant_customers =  [6,9,10,17,18,22,4,1]     #find_relevant_customers(od_matrix_as_dict,len(customer_list), d_l_l, d_l_u)
     customer_share = len(relevant_customers) / len(customer_list)
-    print("Total demand" ,[total_demands_nested_dict[c]['PNC'] for c in relevant_customers])
 
 
-    print(" + + + + + NEXT ITERATION + + + + + + \nNumber Vehicles:" , str(v_num), "Distance limit lower / upper:",str(d_l_l), "|", str(d_l_u))
-    print("Current customer list: " , relevant_customers, " |Customer share" , customer_share)
+    # print(" + + + + + NEXT ITERATION + + + + + + \nNumber Vehicles:" , str(v_num), "Distance limit lower / upper:",str(d_l_l), "|", str(d_l_u))
+    # print("Current customer list: " , relevant_customers, " |Customer share" , customer_share)
 
     inputs = FP_VRP_Input(vehicle_props=v_features_2, customer_list=relevant_customers,
                           services_list=services_list,
@@ -89,7 +87,7 @@ for s in scenarios:
                           coordinates=coordinates, vehicle_capa=vehicle_capacity,
                           number_vehicles = v_num, service_info=services_times,
                           a_car_range=a_Car_range, limit=(d_l_l, d_l_u), hours_per_day=time_per_day,
-                          variant=variante)
+                          variant=variante, v_s=v_s)
 
     model = MIP_FP_VRP(inputs)
     model.set_constraints()
