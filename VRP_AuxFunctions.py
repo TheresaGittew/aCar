@@ -37,4 +37,4 @@ def update_battery_usage(vehicle_features, distance, load, service_weight):
 
 
 v_features_2 = VehicleFeatures(range_zero_weight=200, range_1000kgs_weight=50, total_capa=1000, max_weight=500)
-print(v_features_2.compute_range_for_weight(150))
+print(v_features_2.compute_range_for_weight(60))

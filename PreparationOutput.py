@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 # col_names_list has to go from left to the right; important: one has to be value! Otherwise throws error
@@ -11,8 +12,15 @@ def dict_to_pd_dataframe(dict, col_names_list):
     return df
 
 
-def prepare_outputs(input_sets, list_of_output_dicts, list_of_col_names, output_pd_names, excel_file_name='Results/Output_FH_VRP_new.xlsx'):
-    writer = pd.ExcelWriter(excel_file_name, engine='xlsxwriter')
+def prepare_outputs(input_sets, list_of_output_dicts, list_of_col_names, output_pd_names, exel_file_path='Results/'):
+    plot_dir = os.path.dirname(__file__)
+    path_with_file = os.path.join(plot_dir, exel_file_path)
+    excel_name = "Decision Variables Results.xlsx"
+
+    if not os.path.isdir(path_with_file):
+        os.makedirs(path_with_file)
+
+    writer = pd.ExcelWriter(path_with_file + excel_name, engine='xlsxwriter')
 
     output_dicts = {}
     for l in range(len(list_of_output_dicts)):
@@ -22,6 +30,8 @@ def prepare_outputs(input_sets, list_of_output_dicts, list_of_col_names, output_
         output_dicts[output_pd_names[l]].to_excel(writer, sheet_name=output_pd_names[l])
 
     writer.save()
+
+
 
     # print(output_dicts['z'].loc[(slice(None),1,'PNC'),:])
     return output_dicts

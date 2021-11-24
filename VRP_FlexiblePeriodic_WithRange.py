@@ -35,7 +35,6 @@ class FP_VRP_Input():
                  hours_per_day, variant='Default', v_s=None):
         self.variant = variant
         self.vehicle_props = vehicle_props
-        print("Vehicle weight max is " , vehicle_props.max_weight)
         self.C = customer_list          # customers
         self.S = services_list          # services
         self.T = timeintervals_list     # list of timeintervals
@@ -229,28 +228,35 @@ class MIP_FP_VRP():
         self.mp.Params.MIPGap = 0.001
         # self.mp.setParam('OutputFlag', 0)
         self.mp.optimize()
-        # for k, v in self.helper_e.items():
-        #     if v.X != 0:
-        #         print (k, v)
-        # print(self.sets.arc_weight_to_battery_usage[0,1,400])
-        # print("NOW e:")
-        # for k, v in self.e.items():
-        #     print(k, v)
+
+        if self.sets.variant == Variant.DYNAMIC_ACAR_RANGE:
+            print("These are the selected weights transported on an arc:")
+            print("arc(o-d), time, weight   |   Value ")
+            for k, v in self.helper_e.items():
+
+                if v.X != 0:
+                    print (k ,  v)
+
+            print("This is the remaining battery status per node ")
+            print("node, time              |battery status")
+            for k, v in self.e.items():
+
+                print(k, v)
 
 
 
 
 
-    def prep_output(self):
+    def prep_output(self, path_for_output):
         if self.mp.Status == 3 or self.mp.Status == 4:
             self.status_sol = 'INF_OR_UNBD'
 
         else:
-            self.df_outputs = prepare_outputs([0],  [self.z, self.q, self.y, self.l,  self.z_hub], [['customer_index', 'time_index', 'service_type'],
+            self.df_outputs = prepare_outputs([0], [self.z, self.q, self.y, self.l,  self.z_hub], [['customer_index', 'time_index', 'service_type'],
                                                                     ['customer_index', 'time_index', 'service_type'],
                                                                     ['i', 'j', 'time_index',
                                                                      ], ['i', 'j', 'time_index',
-                                                                     'service_type'], ['node_index', 'time_index']], ['z','q','y','l', 'z_hub'])
+                                                                     'service_type'], ['node_index', 'time_index']], ['z','q','y','l', 'z_hub'], exel_file_path=path_for_output)
             self.status_sol = 'SUCCESS'
 
 
